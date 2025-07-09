@@ -1,2 +1,2 @@
-# Nova
-a personal finance app i am making to pay off my student loans and credit cards 
+In a world full of automated personal finance apps, it's easy to lose track of where your money is actually going. While automation is convenient, it often removes the sense of intentionality and routine that helps build financial awareness and discipline.
+novaFinance is a free, lightweight, and transparent tool that brings you back into the loop. It encourages a weekly rhythm of reflection and review by requiring manual data entry or CSV uploads, so you stay connected to your spending and savings habits — without surrendering control to opaque algorithms.
