@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Finance Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white p-6">
+  <h1 class="text-3xl font-bold mb-6">Personal Finance Dashboard</h1>
+
+  <div class="bg-gray-800 p-4 rounded-lg">
+    {{ net_worth_chart | safe }}
+    {{ expense_chart | safe }}
+    {{ income_chart | safe }}
+    {{credit_card_balances | safe }}
+    {{income_chart | safe }}
+  </div>
+</body>
+</html>
