@@ -1,0 +1,8 @@
+Date,Description,Amount,Category,Kind,Transaction ID
+2026-09-01,Monthly payroll,4200.00,Salary,income,sample-001
+2026-09-02,Rent,-1450.00,Housing,expense,sample-002
+2026-09-04,Weekly groceries,-86.42,Groceries,expense,sample-003
+2026-09-05,Coffee shop,-6.50,Dining,expense,sample-004
+2026-09-06,Internet bill,-65.00,Utilities,expense,sample-005
+2026-09-07,Transfer to savings,-500.00,Transfer,transfer,sample-006
+2026-09-08,Returned groceries,12.00,Groceries,expense,sample-007

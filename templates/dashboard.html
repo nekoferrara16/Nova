@@ -2,18 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Finance Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#21745d">
+  <meta name="description" content="novaFinance — your finances, in perspective. A private dashboard for accounts, spending, and budgets.">
+  <title>novaFinance · Your money, in perspective</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="/static/app.js" defer></script>
 </head>
-<body class="bg-gray-900 text-white p-6">
-  <h1 class="text-3xl font-bold mb-6">Personal Finance Dashboard</h1>
-
-  <div class="bg-gray-800 p-4 rounded-lg">
-    {{ net_worth_chart | safe }}
-    {{ expense_chart | safe }}
-    {{ income_chart | safe }}
-    {{credit_card_balances | safe }}
-    {{income_chart | safe }}
+<body>
+  <div id="boot" class="loading-state">Opening your workspace…</div>
+  <section id="auth" class="auth-screen" hidden>
+    <div class="auth-story">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span><span class="brand-word">nova<span>finance</span></span></div>
+      <h1>Your money.<br>A clearer picture.</h1>
+      <p>A little perspective changes everything. Bring your accounts together, find your rhythm, and make room for what matters.</p>
+      <div class="auth-points"><span data-icon="shield"></span><span>Your data stays yours</span><span>Free to run</span><span>No bank credentials</span></div>
+    </div>
+    <div class="auth-form-area">
+      <form id="auth-form" class="auth-form">
+        <div class="eyebrow" id="auth-eyebrow">Your personal workspace</div><br>
+        <h2 id="auth-title">Welcome back.</h2>
+        <p id="auth-description">Sign in to see the bigger picture.</p>
+        <label class="field">Username<input name="username" autocomplete="username" minlength="3" maxlength="60" pattern="[a-zA-Z0-9_.-]+" placeholder="Your username" required></label>
+        <label class="field">Password<input name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" placeholder="At least 12 characters" required></label>
+        <p id="auth-error" class="form-error" role="alert"></p>
+        <button class="button primary" id="auth-submit" type="submit">Sign in <span data-icon="arrow"></span></button>
+        <div class="auth-toggle"><span id="auth-toggle-label">New here?</span> <button id="auth-toggle" type="button">Create a workspace</button></div>
+        <div class="auth-fine">No subscription. No API keys. No bank login.<br>Each user has a separate, password-protected workspace.</div>
+      </form>
+    </div>
+  </section>
+  <div id="app" hidden>
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#overview"><span class="brand-mark" aria-hidden="true">✳</span><span class="brand-word">nova<span>finance</span></span></a>
+      <div class="brand-caption">A LITTLE MORE CLARITY</div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="nav" aria-label="Main navigation">
+        <button data-view="overview" class="active"><span data-icon="overview"></span>Overview</button>
+        <button data-view="transactions"><span data-icon="transactions"></span>Transactions</button>
+        <button data-view="budgets"><span data-icon="budget"></span>Budgets</button>
+        <button data-view="accounts"><span data-icon="wallet"></span>Accounts</button>
+        <button data-view="insights"><span data-icon="insight"></span>Insights</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="private-note"><span data-icon="shield"></span><br><strong>Personal by design.</strong><p>No bank credentials or tracking.<br>Import your data. Keep control.</p></div>
+        <nav class="nav" aria-label="Workspace settings"><button data-view="settings"><span data-icon="settings"></span>Settings & exports</button></nav>
+        <div class="profile"><span class="avatar" id="avatar">N</span><div class="profile-info"><strong id="username">My workspace</strong><small>Personal workspace</small></div><button id="logout" class="icon-button" title="Sign out" aria-label="Sign out"><span data-icon="logout"></span></button></div>
+      </div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><div class="breadcrumb"><button id="mobile-menu" class="icon-button mobile-menu" aria-label="Toggle navigation" aria-expanded="false"><span data-icon="menu"></span></button>Workspace <span>/</span> <span id="breadcrumb">Overview</span></div><div class="top-actions"><span class="status"><i></i> <span id="save-status">All changes saved</span></span><button class="text-link help-link" id="help"><span data-icon="help"></span>How it works</button></div></header>
+      <main class="main">
+        <div class="page-head"><div><h1 id="page-title">Your financial overview</h1><p id="page-subtitle">A little perspective on where you are, and where you're going.</p></div><div class="head-actions"><label class="month-picker" aria-label="Reporting month"><span data-icon="calendar"></span><input type="month" id="month" aria-label="Reporting month" required min="1901-01" max="9998-12"></label><button class="button" data-action="import"><span data-icon="upload"></span>Import CSV</button><button class="button primary" data-action="transaction"><span data-icon="plus"></span>Add transaction</button></div></div>
+        <div id="page-content"></div>
+        <footer class="footer"><span>Made for mindful money management.</span><span>novaFinance · USD · <span id="as-of"></span></span></footer>
+      </main>
+    </div>
   </div>
+  <dialog id="editor" aria-labelledby="editor-title"><div class="dialog-head"><div><h2 id="editor-title"></h2><p id="editor-description"></p></div><button class="icon-button" data-close="editor" aria-label="Close dialog"><span data-icon="close"></span></button></div><div class="dialog-body"><form id="editor-form" class="form-grid"></form></div></dialog>
+  <dialog id="import-dialog" class="wide" aria-labelledby="import-title"><div class="dialog-head"><div><h2 id="import-title">Bring your data together</h2><p>One statement closer to the full picture.</p></div><button class="icon-button" data-close="import-dialog" aria-label="Close import"><span data-icon="close"></span></button></div><div class="dialog-body" id="import-content"></div></dialog>
+  <dialog id="help-dialog" aria-labelledby="help-title"><div class="dialog-head"><h2 id="help-title">A rhythm that works for you</h2><button class="icon-button" data-close="help-dialog" aria-label="Close help"><span data-icon="close"></span></button></div><div class="dialog-body"><div class="settings-list"><div><h3>01 · Start with your accounts</h3><p class="section-note">Set an opening balance at the start of your chosen date. Import only transactions on or after that date. For credit cards and loans, enter the positive amount you owe.</p></div><div><h3>02 · Make a weekly check-in</h3><p class="section-note">Download a CSV from your bank, choose its columns and date format, and review the preview. Positive amounts add money; negative amounts subtract it. Mark card payments and movements between your accounts as transfers. Use expense kind for refunds to offset spending.</p></div><div><h3>03 · Give your money a plan</h3><p class="section-note">Set monthly category budgets and check your cash flow. Balances are calculated from opening balances and recorded transactions; they are not a live bank feed. Investment accounts track entered cash values, not live market prices.</p></div><div class="form-note">Reports use USD and include transactions through today or the selected month's end, whichever comes first. An incomplete statement means an incomplete picture. Repeated imports use transaction IDs when mapped, otherwise date, description, amount, and occurrence; review overlapping statements carefully.</div></div></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

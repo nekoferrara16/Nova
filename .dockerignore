@@ -1,0 +1,8 @@
+**
+!requirements.txt
+!main/
+!main/*.py
+!static/
+!static/*
+!templates/
+!templates/*

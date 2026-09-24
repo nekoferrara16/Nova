@@ -1,0 +1,1 @@
+"""novaFinance application."""
